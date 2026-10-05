@@ -1,15 +1,20 @@
 /*****************************************/
 /*    		  Assignment 3     			 */
-/*    by Firli Wulansari Wahyuputri		 */
+/*          by Rafi Farhanto		     */
 /* 			   u8323089		 			 */
 /*****************************************/
 
 clear		all
 set			more off
-cd "/Users/Firli/Downloads/IDEC8026"
+cd "G:\My Drive\File Laptop\Postgraduate\Study\Semester 1\3. Quantitative Policy Impact Evaluation\Assignment 3"
 use "raw_data.dta"
 
-/******Question 1******************/
+/***********************************/
+/****** Question 1 *****************/
+/***********************************/
+
+********** Rename variables **********
+
 rename v1 AGE
 rename v2 AGEQ
 rename v4 EDUC
@@ -30,13 +35,18 @@ rename v25 WSOCENT
 rename v27 YOB
 
 
-********** YOB dummies **********
+********** Standardize YOB **********
 
 replace YOB = YOB - 1900 if YOB >= 1900
 
+
+********** YOB dummies **********
+
 foreach i of numlist 0/9 {
     gen YR`i' = 0
-    replace YR`i' = 1 if YOB == 20+`i' | YOB == 30+`i' | YOB == 40+`i'
+    replace YR`i' = 1 if YOB == 20+`i' | ///
+                         YOB == 30+`i' | ///
+                         YOB == 40+`i'
 }
 
 
@@ -47,17 +57,28 @@ foreach i of numlist 1/4 {
     replace QTR`i' = 1 if QOB == `i'
 }
 
-////////////////////////////////////////////////////////
-********** Select Particular Men Born **********
+
+********** Create birth-year cohorts **********
 
 gen COHORT = 2029
 
-replace COHORT = 3039 if YOB <= 39 & YOB >= 30
-replace COHORT = 4049 if YOB <= 49 & YOB >= 40
+replace COHORT = 3039 if YOB >= 30 & YOB <= 39
+replace COHORT = 4049 if YOB >= 40 & YOB <= 49
+
+
+********** Prepare age variables **********
 
 replace AGEQ = AGEQ - 1900 if CENSUS == 80
 
 gen AGEQSQ = AGEQ * AGEQ
+
+
+/********************************************************/
+/* IMPORTANT: preserve full sample before restricting    */
+/* to 1930-1939 for Question 1                          */
+/********************************************************/
+
+preserve
 
 
 ********** Keep 1930-1939 cohort **********
@@ -65,7 +86,7 @@ gen AGEQSQ = AGEQ * AGEQ
 keep if COHORT > 3000 & COHORT < 3040
 
 
-********** Start Regression **********
+********** Start Regression **********/
 
 eststo clear
 
@@ -151,7 +172,7 @@ label variable AGEQ     "Age"
 label variable AGEQSQ   "Age-squared"
 
 
-********** Export Table **********
+********** Export Question 1 Table **********
 
 esttab using ///
 "table5_nointeraction.tex", ///
@@ -166,21 +187,19 @@ nonumbers ///
 mtitles("(1) OLS" "(2) TSLS" "(3) OLS" "(4) TSLS" ///
         "(5) OLS" "(6) TSLS" "(7) OLS" "(8) TSLS")
 
-		
+
+/********************************************************/
+/* Question 2                 */
+/********************************************************/
+
+restore
+
+
 /***********************************/
-/******Question 2******************/		
+/****** Question 2 *****************/
 /***********************************/
 
-**************************************************
-********** Standardize Year of Birth *************
-**************************************************
-
-replace YOB = YOB - 1900 if YOB >= 1900
-
-
-**************************************************
-********** Create Q1 Instrument ******************
-**************************************************
+********** Create Q1 instrument **********/
 
 gen Q1 = 0
 replace Q1 = 1 if QOB == 1
@@ -188,29 +207,21 @@ replace Q1 = 1 if QOB == 1
 label variable Q1 "Born in first quarter"
 
 
-**************************************************
-********** Prepare Age Variables *****************
-**************************************************
-
-replace AGEQ = AGEQ - 1900 if CENSUS == 80
-
-gen AGEQSQ = AGEQ * AGEQ
-
-
-**************************************************
-********** Clear Stored Estimates ****************
-**************************************************
+********** Clear stored estimates **********/
 
 eststo clear
 
 
-**************************************************
-********** Birth Year 1920 ***********************
-**************************************************
+/************************************************/
+/********** Birth Year 1920 *********************/
+/************************************************/
 
 preserve
 
 keep if YOB == 20
+
+* Check sample size
+count
 
 * Mean log weekly wage and education by Q1 status
 mean LWKLYWGE EDUC, over(Q1)
@@ -229,13 +240,16 @@ estat firststage
 restore
 
 
-**************************************************
-********** Birth Year 1930 ***********************
-**************************************************
+/************************************************/
+/********** Birth Year 1930 *********************/
+/************************************************/
 
 preserve
 
 keep if YOB == 30
+
+* Check sample size
+count
 
 * Mean log weekly wage and education by Q1 status
 mean LWKLYWGE EDUC, over(Q1)
@@ -254,13 +268,16 @@ estat firststage
 restore
 
 
-**************************************************
-********** Birth Year 1940 ***********************
-**************************************************
+/************************************************/
+/********** Birth Year 1940 *********************/
+/************************************************/
 
 preserve
 
 keep if YOB == 40
+
+* Check sample size
+count
 
 * Mean log weekly wage and education by Q1 status
 mean LWKLYWGE EDUC, over(Q1)
@@ -279,16 +296,12 @@ estat firststage
 restore
 
 
-**************************************************
-********** Variable Labels ***********************
-**************************************************
+********** Variable Labels **********/
 
 label variable EDUC "Years of education"
 
 
-**************************************************
-********** Export OLS and IV Table ***************
-**************************************************
+********** Export Question 2 Table **********/
 
 esttab OLS1920 IV1920 ///
        OLS1930 IV1930 ///
@@ -305,9 +318,7 @@ mtitles("1920 OLS" "1920 IV" ///
         "1940 OLS" "1940 IV")
 
 
-**************************************************
-********** Optional: Display in Stata ************
-**************************************************
+********** Display Question 2 Table in Stata **********/
 
 esttab OLS1920 IV1920 ///
        OLS1930 IV1930 ///
