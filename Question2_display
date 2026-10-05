@@ -1,0 +1,105 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\begin{document}
+
+\begin{table}[htbp]
+\centering
+\caption{Year-Specific Wald Estimates of the Return to Education}
+\label{tab:wald_year_specific}
+
+\begin{tabular}{lccc}
+\toprule
+& (1) & (2) & (3) \\
+& Born in 1st quarter
+& Born in 2nd, 3rd, or 4th quarter
+& Difference \\
+& & & (Std. Error) \\
+\midrule
+
+\multicolumn{4}{l}{\textbf{Panel A: Men Born in 1920}} \\[0.5em]
+
+ln(weekly wage)
+& [Q1 wage]
+& [Q2--Q4 wage]
+& [difference] \\
+& & & ([SE]) \\[0.6em]
+
+Education
+& [Q1 education]
+& [Q2--Q4 education]
+& [difference] \\
+& & & ([SE]) \\[0.6em]
+
+Wald estimate of return to education
+& & & 0.0872 \\
+& & & (0.0347) \\[0.6em]
+
+OLS return to education
+& & & 0.0808 \\
+& & & (0.00117) \\
+
+\midrule
+
+\multicolumn{4}{l}{\textbf{Panel B: Men Born in 1930}} \\[0.5em]
+
+ln(weekly wage)
+& [Q1 wage]
+& [Q2--Q4 wage]
+& [difference] \\
+& & & ([SE]) \\[0.6em]
+
+Education
+& [Q1 education]
+& [Q2--Q4 education]
+& [difference] \\
+& & & ([SE]) \\[0.6em]
+
+Wald estimate of return to education
+& & & 0.0775 \\
+& & & (0.0351) \\[0.6em]
+
+OLS return to education
+& & & 0.0693 \\
+& & & (0.00103) \\
+
+\midrule
+
+\multicolumn{4}{l}{\textbf{Panel C: Men Born in 1940}} \\[0.5em]
+
+ln(weekly wage)
+& [Q1 wage]
+& [Q2--Q4 wage]
+& [difference] \\
+& & & ([SE]) \\[0.6em]
+
+Education
+& [Q1 education]
+& [Q2--Q4 education]
+& [difference] \\
+& & & ([SE]) \\[0.6em]
+
+Wald estimate of return to education
+& & & 0.1160 \\
+& & & (0.0545) \\[0.6em]
+
+OLS return to education
+& & & 0.0712 \\
+& & & (0.00103) \\
+
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}
+\footnotesize
+Notes: Column (1) reports means for individuals born in the first quarter of the year. 
+Column (2) reports means for individuals born in the second, third, or fourth quarter. 
+Column (3) reports the difference between columns (1) and (2). 
+The Wald estimate is obtained using an indicator for first-quarter birth as an instrument for years of education.
+\end{flushleft}
+
+\end{table}
+
+\end{document}
