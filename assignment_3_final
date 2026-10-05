@@ -228,177 +228,256 @@ restore
 /***********************************/
 
 
-**************************************************
-********** QOB × YOB Interactions *****************
-**************************************************
-
-foreach j of numlist 1/3 {
-    foreach i of numlist 0/9 {
-        gen QTR`j'YR`i' = QTR`j' * YR`i'
-    }
-}
-
-
-
-**************************************************
-**************************************************
-********** PANEL A: BORN IN 1920 *****************
-**************************************************
-**************************************************
-
-display " "
 display "============================================"
-display "PANEL A: MEN BORN IN 1920"
+display "YEAR 1920"
 display "============================================"
 
+* -------------------------------
+* Log weekly wage
+* -------------------------------
 
-********** Log Weekly Wage **********
-
-* (1) Mean log weekly wage: Q1
 sum LWKLYWGE if QTR1 == 1 & YOB == 20
+scalar wage_q1_20 = r(mean)
 
-* (2) Mean log weekly wage: Q2-Q4
 sum LWKLYWGE if QTR1 == 0 & YOB == 20
+scalar wage_q234_20 = r(mean)
 
-* (3) Difference: Q1 - Q2/Q3/Q4
 reg LWKLYWGE QTR1 if YOB == 20
+scalar wage_diff_20 = _b[QTR1]
+scalar wage_se_20   = _se[QTR1]
 
 
-********** Education **********
+* -------------------------------
+* Education
+* -------------------------------
 
-* (4) Mean education: Q1
 sum EDUC if QTR1 == 1 & YOB == 20
+scalar educ_q1_20 = r(mean)
 
-* (5) Mean education: Q2-Q4
 sum EDUC if QTR1 == 0 & YOB == 20
+scalar educ_q234_20 = r(mean)
 
-* (6) Difference: Q1 - Q2/Q3/Q4
 reg EDUC QTR1 if YOB == 20
+scalar educ_diff_20 = _b[QTR1]
+scalar educ_se_20   = _se[QTR1]
 
 
-********** Wald Estimate **********
+* -------------------------------
+* Wald estimate
+* -------------------------------
 
 sureg ///
-    (eq1: LWKLYWGE QTR1) ///
-    (eq2: EDUC QTR1) ///
+    (wage: LWKLYWGE QTR1) ///
+    (educ: EDUC QTR1) ///
     if YOB == 20
 
-* (7) Wald estimate
-nlcom ratio: ///
-    [eq1]_b[QTR1] / [eq2]_b[QTR1]
+nlcom (wald20: [wage]_b[QTR1] / [educ]_b[QTR1])
+
+scalar wald_20    = r(b)[1,1]
+scalar wald_se_20 = sqrt(r(V)[1,1])
 
 
-********** OLS Estimate **********
+* -------------------------------
+* OLS estimate
+* -------------------------------
 
-* (8) OLS return to education
 reg LWKLYWGE EDUC if YOB == 20
 
+scalar ols_20    = _b[EDUC]
+scalar ols_se_20 = _se[EDUC]
 
 
+
 **************************************************
-**************************************************
-********** PANEL B: BORN IN 1930 *****************
-**************************************************
+********** YEAR 1930 ******************************
 **************************************************
 
-display " "
 display "============================================"
-display "PANEL B: MEN BORN IN 1930"
+display "YEAR 1930"
 display "============================================"
 
+* -------------------------------
+* Log weekly wage
+* -------------------------------
 
-********** Log Weekly Wage **********
-
-* (9) Mean log weekly wage: Q1
 sum LWKLYWGE if QTR1 == 1 & YOB == 30
+scalar wage_q1_30 = r(mean)
 
-* (10) Mean log weekly wage: Q2-Q4
 sum LWKLYWGE if QTR1 == 0 & YOB == 30
+scalar wage_q234_30 = r(mean)
 
-* (11) Difference
 reg LWKLYWGE QTR1 if YOB == 30
+scalar wage_diff_30 = _b[QTR1]
+scalar wage_se_30   = _se[QTR1]
 
 
-********** Education **********
+* -------------------------------
+* Education
+* -------------------------------
 
-* (12) Mean education: Q1
 sum EDUC if QTR1 == 1 & YOB == 30
+scalar educ_q1_30 = r(mean)
 
-* (13) Mean education: Q2-Q4
 sum EDUC if QTR1 == 0 & YOB == 30
+scalar educ_q234_30 = r(mean)
 
-* (14) Difference
 reg EDUC QTR1 if YOB == 30
+scalar educ_diff_30 = _b[QTR1]
+scalar educ_se_30   = _se[QTR1]
 
 
-********** Wald Estimate **********
+* -------------------------------
+* Wald estimate
+* -------------------------------
 
 sureg ///
-    (eq1: LWKLYWGE QTR1) ///
-    (eq2: EDUC QTR1) ///
+    (wage: LWKLYWGE QTR1) ///
+    (educ: EDUC QTR1) ///
     if YOB == 30
 
-* (15) Wald estimate
-nlcom ratio: ///
-    [eq1]_b[QTR1] / [eq2]_b[QTR1]
+nlcom (wald30: [wage]_b[QTR1] / [educ]_b[QTR1])
+
+scalar wald_30    = r(b)[1,1]
+scalar wald_se_30 = sqrt(r(V)[1,1])
 
 
-********** OLS Estimate **********
+* -------------------------------
+* OLS estimate
+* -------------------------------
 
-* (16) OLS return to education
 reg LWKLYWGE EDUC if YOB == 30
 
+scalar ols_30    = _b[EDUC]
+scalar ols_se_30 = _se[EDUC]
 
 
+
 **************************************************
+********** YEAR 1940 ******************************
 **************************************************
-********** PANEL C: BORN IN 1940 *****************
+
+display "============================================"
+display "YEAR 1940"
+display "============================================"
+
+* -------------------------------
+* Log weekly wage
+* -------------------------------
+
+sum LWKLYWGE if QTR1 == 1 & YOB == 40
+scalar wage_q1_40 = r(mean)
+
+sum LWKLYWGE if QTR1 == 0 & YOB == 40
+scalar wage_q234_40 = r(mean)
+
+reg LWKLYWGE QTR1 if YOB == 40
+scalar wage_diff_40 = _b[QTR1]
+scalar wage_se_40   = _se[QTR1]
+
+
+* -------------------------------
+* Education
+* -------------------------------
+
+sum EDUC if QTR1 == 1 & YOB == 40
+scalar educ_q1_40 = r(mean)
+
+sum EDUC if QTR1 == 0 & YOB == 40
+scalar educ_q234_40 = r(mean)
+
+reg EDUC QTR1 if YOB == 40
+scalar educ_diff_40 = _b[QTR1]
+scalar educ_se_40   = _se[QTR1]
+
+
+* -------------------------------
+* Wald estimate
+* -------------------------------
+
+sureg ///
+    (wage: LWKLYWGE QTR1) ///
+    (educ: EDUC QTR1) ///
+    if YOB == 40
+
+nlcom (wald40: [wage]_b[QTR1] / [educ]_b[QTR1])
+
+scalar wald_40    = r(b)[1,1]
+scalar wald_se_40 = sqrt(r(V)[1,1])
+
+
+* -------------------------------
+* OLS estimate
+* -------------------------------
+
+reg LWKLYWGE EDUC if YOB == 40
+
+scalar ols_40    = _b[EDUC]
+scalar ols_se_40 = _se[EDUC]
+
+
+
 **************************************************
+********** DISPLAY FINAL RESULTS ******************
 **************************************************
 
 display " "
-display "============================================"
-display "PANEL C: MEN BORN IN 1940"
-display "============================================"
+display "================ YEAR 1920 ================="
+
+display "ln(wkly wage)"
+display "Q1      = " %9.5f wage_q1_20
+display "Q2-Q4   = " %9.5f wage_q234_20
+display "Diff    = " %9.5f wage_diff_20
+display "SE      = " %9.5f wage_se_20
+
+display "Education"
+display "Q1      = " %9.5f educ_q1_20
+display "Q2-Q4   = " %9.5f educ_q234_20
+display "Diff    = " %9.5f educ_diff_20
+display "SE      = " %9.5f educ_se_20
+
+display "Wald    = " %9.5f wald_20
+display "Wald SE = " %9.5f wald_se_20
+display "OLS     = " %9.5f ols_20
+display "OLS SE  = " %9.5f ols_se_20
 
 
-********** Log Weekly Wage **********
+display " "
+display "================ YEAR 1930 ================="
 
-* (17) Mean log weekly wage: Q1
-sum LWKLYWGE if QTR1 == 1 & YOB == 40
+display "ln(wkly wage)"
+display "Q1      = " %9.5f wage_q1_30
+display "Q2-Q4   = " %9.5f wage_q234_30
+display "Diff    = " %9.5f wage_diff_30
+display "SE      = " %9.5f wage_se_30
 
-* (18) Mean log weekly wage: Q2-Q4
-sum LWKLYWGE if QTR1 == 0 & YOB == 40
+display "Education"
+display "Q1      = " %9.5f educ_q1_30
+display "Q2-Q4   = " %9.5f educ_q234_30
+display "Diff    = " %9.5f educ_diff_30
+display "SE      = " %9.5f educ_se_30
 
-* (19) Difference
-reg LWKLYWGE QTR1 if YOB == 40
-
-
-********** Education **********
-
-* (20) Mean education: Q1
-sum EDUC if QTR1 == 1 & YOB == 40
-
-* (21) Mean education: Q2-Q4
-sum EDUC if QTR1 == 0 & YOB == 40
-
-* (22) Difference
-reg EDUC QTR1 if YOB == 40
+display "Wald    = " %9.5f wald_30
+display "Wald SE = " %9.5f wald_se_30
+display "OLS     = " %9.5f ols_30
+display "OLS SE  = " %9.5f ols_se_30
 
 
-********** Wald Estimate **********
+display " "
+display "================ YEAR 1940 ================="
 
-sureg ///
-    (eq1: LWKLYWGE QTR1) ///
-    (eq2: EDUC QTR1) ///
-    if YOB == 40
+display "ln(wkly wage)"
+display "Q1      = " %9.5f wage_q1_40
+display "Q2-Q4   = " %9.5f wage_q234_40
+display "Diff    = " %9.5f wage_diff_40
+display "SE      = " %9.5f wage_se_40
 
-* (23) Wald estimate
-nlcom ratio: ///
-    [eq1]_b[QTR1] / [eq2]_b[QTR1]
+display "Education"
+display "Q1      = " %9.5f educ_q1_40
+display "Q2-Q4   = " %9.5f educ_q234_40
+display "Diff    = " %9.5f educ_diff_40
+display "SE      = " %9.5f educ_se_40
 
-
-********** OLS Estimate **********
-
-* (24) OLS return to education
-reg LWKLYWGE EDUC if YOB == 40
+display "Wald    = " %9.5f wald_40
+display "Wald SE = " %9.5f wald_se_40
+display "OLS     = " %9.5f ols_40
+display "OLS SE  = " %9.5f ols_se_40
